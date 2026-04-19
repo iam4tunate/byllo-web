@@ -1,26 +1,144 @@
 @import "tailwindcss";
 
+/* ─── Root variables ────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8f9fc; /* surface.raised */
+  --foreground: #0d0f14; /* ink.DEFAULT    */
 }
 
-@theme inline {
+/* ─── Tailwind v4 theme — mirrors mobile tailwind.config.js ─────── */
+@theme {
+  /* Typography */
+  --font-sans: var(--font-dm-sans);
+
+  /* Background / Foreground aliases */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* ── Brand ──────────────────────────────────────────────────── */
+  --color-brand:         #2563eb;
+  --color-brand-light:   #3b82f6;
+  --color-brand-dark:    #1d4ed8;
+  --color-brand-muted:   #eff6ff;
+  --color-brand-subtle:  #bfdbfe;
+
+  /* ── Accent ─────────────────────────────────────────────────── */
+  --color-accent:        #c8f500;
+  --color-accent-dark:   #a3cc00;
+  --color-accent-text:   #3a5000;
+
+  /* ── Surface / Neutral ──────────────────────────────────────── */
+  --color-surface:        #ffffff;
+  --color-surface-raised: #f8f9fc;
+  --color-surface-card:   #ffffff;
+  --color-surface-border: #e8ebf0;
+  --color-surface-input:  #f2f4f7;
+
+  /* ── Ink (text) ─────────────────────────────────────────────── */
+  --color-ink:           #0d0f14;
+  --color-ink-secondary: #5a6070;
+  --color-ink-tertiary:  #8c95a6;
+  --color-ink-inverse:   #ffffff;
+
+  /* ── Status ─────────────────────────────────────────────────── */
+  --color-success:       #16a34a;
+  --color-success-light: #dcfce7;
+  --color-success-text:  #15803d;
+
+  --color-warning:       #d97706;
+  --color-warning-light: #fef3c7;
+  --color-warning-text:  #b45309;
+
+  --color-danger:        #dc2626;
+  --color-danger-light:  #fee2e2;
+  --color-danger-text:   #b91c1c;
+
+  /* ── Dark panel ─────────────────────────────────────────────── */
+  --color-dark:          #0f1117;
+  --color-dark-card:     #1a1d27;
+  --color-dark-border:   #2a2e3a;
+  --color-dark-muted:    #3a3f52;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-dark-card);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-dark-card);
+}
+
+
+/* ─── Base defaults ─────────────────────────────────────────────── */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Utility classes — ported from mobile global.css ──────────── */
+@layer utilities {
+  /* Spacing */
+  .pad-x  { padding-left: 20px; padding-right: 20px; }
+  .pad-y  { padding-top: 20px; padding-bottom: 20px; }
+  .pad-xy { padding: 20px; }
+
+  /* Row layout helpers */
+  .row         { display: flex; flex-direction: row; align-items: center; }
+  .row-between { display: flex; flex-direction: row; align-items: center; justify-content: space-between; }
+  .row-center  { display: flex; flex-direction: row; align-items: center; justify-content: center; }
+
+  /* Text colour shortcuts */
+  .text-primary   { color: var(--color-ink); }
+  .text-secondary { color: var(--color-ink-secondary); }
+  .text-muted     { color: var(--color-ink-tertiary); }
+  .text-on-brand  { color: var(--color-ink-inverse); }
+  .text-on-dark   { color: var(--color-ink-inverse); }
+
+  /* Custom Animations */
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  .animate-float-slow {
+    animation: float 8s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 4s ease-in-out infinite;
+  }
+
+  .animate-marquee {
+    animation: marquee 28s linear infinite;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+    100% { transform: translateY(0px); }
+  }
+
+  @keyframes bounce-slow {
+    0%, 100% { transform: translateY(-5%); }
+    50% { transform: none; }
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 }
