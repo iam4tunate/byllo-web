@@ -6,6 +6,8 @@ import { Input } from "@/components/Input";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
+import { authApi } from "@/lib/api/auth";
+import { signIn } from "next-auth/react";
 
 export default function SIgnUpPage() {
   const router = useRouter();
@@ -36,14 +38,29 @@ export default function SIgnUpPage() {
     setIsLoading(true);
 
     try {
-      // Simulate an async operation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/verify-email");
+      await authApi.signup({
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        role: "vendor",
+      });
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: formData.email.trim(),
+        password: formData.password,
+      });
+
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      router.push(`/verify-email`);
     } catch (error) {
       setError(
         error instanceof Error
           ? error.message
-          : "Failed to login. Please try again.",
+          : "Failed to sign up. Please try again.",
       );
     } finally {
       setIsLoading(false);
@@ -95,9 +112,7 @@ export default function SIgnUpPage() {
           label="Email address"
           placeholder="name@example.com"
           value={formData.email}
-          onChange={(e) =>
-            setFormData({ ...formData, email: e.target.value })
-          }
+          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           disabled={isLoading}
           required
         />
@@ -117,6 +132,7 @@ export default function SIgnUpPage() {
 
         <Button
           type="submit"
+          isLoading={isLoading}
           className="w-full mt-4 shadow-lg shadow-brand/25 active:scale-[0.98] transition-all"
         >
           Get Started

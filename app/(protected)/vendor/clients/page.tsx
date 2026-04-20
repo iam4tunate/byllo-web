@@ -10,18 +10,21 @@ import { Plus, Search, Edit2, Mail, Phone, MapPin, Users } from "lucide-react";
 import { clients } from "@/lib/vendor-data";
 import Link from "next/link";
 import { useState } from "react";
+import { authApi } from "@/lib/api/auth";
 
 export default function ClientsPage() {
   const [search, setSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingClient, setEditingClient] = useState<ClientFormData | null>(null);
+  const [editingClient, setEditingClient] = useState<ClientFormData | null>(
+    null,
+  );
 
   const handleCreateNew = () => {
     setEditingClient(null);
     setIsModalOpen(true);
   };
 
-  const handleEdit = (client: typeof clients[0]) => {
+  const handleEdit = (client: (typeof clients)[0]) => {
     setEditingClient({
       id: client.id.toString(),
       name: client.name,
@@ -33,8 +36,8 @@ export default function ClientsPage() {
   };
 
   const handleSaveClient = (data: ClientFormData) => {
-    // In a real app, you would mutate the backend here for both create and update
-    console.log("Saving client:", data);
+    console.log("data", data);
+    // await authApi.(data);
   };
 
   const filteredClients = clients.filter((client) => {
@@ -56,7 +59,7 @@ export default function ClientsPage() {
             Manage your customer relationships and contact history.
           </p>
         </div>
-        <Button 
+        <Button
           className="shadow-lg shadow-brand/25 transition-transform hover:-translate-y-0.5 gap-2 h-12 px-6 w-full sm:w-auto"
           onClick={handleCreateNew}
         >
@@ -65,18 +68,18 @@ export default function ClientsPage() {
         </Button>
       </div>
 
-        <div className="relative w-full max-w-md">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search size={16} color="#8C95A6" strokeWidth={2.5} />
-          </div>
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by client name or email..."
-            className="w-full h-12 bg-surface-raised rounded-lg pl-11 pr-4 text-sm font-medium text-primary placeholder:text-muted focus:outline-none focus:bg-white focus:border focus:border-brand shadow-xs border border-surface-border"
-          />
+      <div className="relative w-full max-w-md">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <Search size={16} color="#8C95A6" strokeWidth={2.5} />
         </div>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by client name or email..."
+          className="w-full h-12 bg-surface-raised rounded-lg pl-11 pr-4 text-sm font-medium text-primary placeholder:text-muted focus:outline-none focus:bg-white focus:border focus:border-brand shadow-xs border border-surface-border"
+        />
+      </div>
 
       {/* ── Stats Overview ── */}
       <div className="flex items-center gap-6">
@@ -90,12 +93,12 @@ export default function ClientsPage() {
 
       {/* ── Client Cards Grid ── */}
       {filteredClients.length === 0 ? (
-        <EmptyState 
-          icon={Users} 
-          entityName="clients" 
-          isSearchActive={search.trim() !== ""} 
+        <EmptyState
+          icon={Users}
+          entityName="clients"
+          isSearchActive={search.trim() !== ""}
           className="bg-surface border border-surface-border rounded-2xl"
-          onClearSearch={() => setSearch("")} 
+          onClearSearch={() => setSearch("")}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -112,13 +115,13 @@ export default function ClientsPage() {
                   {client.status === "active" ? "Active" : "Inactive"}
                 </Badge>
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={() => handleEdit(client)}
                     className="w-8 h-8 rounded-full bg-white border border-surface-border flex items-center justify-center text-muted hover:text-brand hover:border-brand shadow-sm transition-colors"
                   >
                     <Edit2 size={14} color="currentColor" strokeWidth={2.5} />
                   </button>
-                  <Link 
+                  <Link
                     href={`/vendor/invoices/new?clientId=${client.id}`}
                     className="h-8 px-3 rounded-full bg-white border border-surface-border flex items-center justify-center text-muted hover:text-brand hover:border-brand shadow-sm transition-colors gap-1.5 text-[11px] font-bold"
                   >
@@ -196,9 +199,9 @@ export default function ClientsPage() {
         </div>
       )}
 
-      <ClientModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+      <ClientModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         onSave={handleSaveClient}
         initialData={editingClient}
       />

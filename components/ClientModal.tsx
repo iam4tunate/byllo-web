@@ -60,7 +60,7 @@ export function ClientModal({
     setError(null);
 
     if (!formData.name) {
-      setError("Please enter a client name.");
+      setError("Please enter a client or business name.");
       return;
     }
 
@@ -77,8 +77,6 @@ export function ClientModal({
     setIsLoading(true);
 
     try {
-      // Simulate an async operation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       onSave(formData);
       onClose();
     } catch (err) {
@@ -102,7 +100,7 @@ export function ClientModal({
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-2xl bg-surface rounded-4xl shadow-2xl flex flex-col animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 overflow-hidden border border-surface-border max-h-[90vh]">
+      <div className="relative w-full max-w-2xl bg-surface rounded-2xl shadow-2xl flex flex-col animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 overflow-hidden border border-surface-border max-h-[90vh]">
         <div className="flex items-center justify-between p-6 border-b border-surface-border bg-surface-raised/50">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-brand/10 flex items-center justify-center text-brand">

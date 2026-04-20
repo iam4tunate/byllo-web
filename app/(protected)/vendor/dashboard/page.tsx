@@ -15,8 +15,11 @@ import {
   notifications,
 } from "@/lib/vendor-data";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function VendorDashboard() {
+  const { data: session } = useSession();
+  const user = session?.user;
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
@@ -25,32 +28,52 @@ export default function VendorDashboard() {
     <div className="max-w-7xl mx-auto space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
       {/* ── Bento Grid Header ── */}
       <div className="grid grid-cols-12 gap-4 auto-rows-auto">
-
         {/* Greeting tile — col 1-4 */}
         <div className="col-span-12 md:col-span-4 bg-surface border border-surface-border rounded-2xl p-6 flex flex-col justify-between">
           <div>
-            <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] uppercase text-muted bg-surface-raised border border-surface-border px-2.5 py-1 rounded-lg mb-4">{greeting}</span>
-            <h1 className="text-2xl font-bold text-primary leading-snug">Welcome back,<br /><span className="text-brand">Fortunate</span> 👋</h1>
+            <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] uppercase text-muted bg-surface-raised border border-surface-border px-2.5 py-1 rounded-lg mb-4">
+              {greeting}
+            </span>
+            <h1 className="text-2xl font-bold text-primary leading-snug">
+              Welcome back,
+              <br />
+              <span className="text-brand capitalize">
+                {user?.firstName}
+              </span>{" "}
+              👋
+            </h1>
           </div>
           <p className="text-xs font-medium text-muted mt-4">
-            {new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}
+            {new Date().toLocaleDateString("en-GB", {
+              weekday: "long",
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </p>
         </div>
 
         {/* Revenue tile — col 5-9 */}
         <div className="col-span-12 md:col-span-5 relative bg-linear-to-br from-brand to-[#1D4ED8] rounded-2xl overflow-hidden shadow-lg shadow-brand/20 p-6 group">
           <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/3 pointer-events-none group-hover:bg-white/15 transition-colors duration-500" />
-          <p className="text-[10px] font-extrabold tracking-[0.2em] uppercase text-white/60 mb-3">Total Revenue</p>
+          <p className="text-[10px] font-extrabold tracking-[0.2em] uppercase text-white/60 mb-3">
+            Total Revenue
+          </p>
           <p className="text-4xl font-extrabold text-white tracking-tight mb-4">
-            ₦24,580<span className="text-xl text-white/40 font-semibold">.00</span>
+            ₦24,580
+            <span className="text-xl text-white/40 font-semibold">.00</span>
           </p>
           <div className="flex items-center gap-3 flex-wrap">
             <div className="inline-flex items-center gap-1.5 bg-emerald-500/20 border border-emerald-500/30 rounded-lg px-3 py-1.5">
               <ArrowUpRight size={13} color="#6EE7B7" strokeWidth={2.5} />
-              <span className="text-xs font-bold text-emerald-300">+12.5% vs last month</span>
+              <span className="text-xs font-bold text-emerald-300">
+                +12.5% vs last month
+              </span>
             </div>
             <div className="inline-flex items-center gap-1.5 bg-white/10 border border-white/10 rounded-lg px-3 py-1.5">
-              <span className="text-xs font-bold text-white/70">57 invoices total</span>
+              <span className="text-xs font-bold text-white/70">
+                57 invoices total
+              </span>
             </div>
           </div>
         </div>
@@ -61,9 +84,13 @@ export default function VendorDashboard() {
             <AlertCircle size={20} color="#EF4444" strokeWidth={2.5} />
           </div>
           <div>
-            <p className="text-[10px] font-extrabold tracking-[0.2em] uppercase text-danger/70 mb-1">Overdue</p>
+            <p className="text-[10px] font-extrabold tracking-[0.2em] uppercase text-danger/70 mb-1">
+              Overdue
+            </p>
             <p className="text-3xl font-extrabold text-danger">₦5.2k</p>
-            <p className="text-xs font-medium text-danger/60 mt-1">3 invoices overdue</p>
+            <p className="text-xs font-medium text-danger/60 mt-1">
+              3 invoices overdue
+            </p>
           </div>
         </div>
 
@@ -75,74 +102,121 @@ export default function VendorDashboard() {
               href={action.href}
               className="col-span-6 md:col-span-3 group bg-surface border border-surface-border hover:border-brand/40 rounded-2xl p-5 flex flex-col gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
             >
-              <div className={`w-11 h-11 ${action.bg} rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+              <div
+                className={`w-11 h-11 ${action.bg} rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-300`}
+              >
                 <action.icon size={20} color="white" strokeWidth={2.5} />
               </div>
               <div>
-                <p className="text-sm font-bold text-primary group-hover:text-brand transition-colors">{action.label}</p>
-                <p className="text-[11px] text-muted font-medium mt-0.5">Draft a new invoice</p>
+                <p className="text-sm font-bold text-primary group-hover:text-brand transition-colors">
+                  {action.label}
+                </p>
+                <p className="text-[11px] text-muted font-medium mt-0.5">
+                  Draft a new invoice
+                </p>
               </div>
-              <ArrowUpRight size={15} className="ml-auto text-muted opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2.5} />
+              <ArrowUpRight
+                size={15}
+                className="ml-auto text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                strokeWidth={2.5}
+              />
             </Link>
-          ) : (() => {
-            const unreadCount = notifications.filter((n) => n.unread).length;
-            return (
-              <Link
-                key="notifications"
-                href="/vendor/notifications"
-                className="col-span-6 md:col-span-3 group bg-surface border border-surface-border hover:border-brand/40 rounded-2xl p-5 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-11 h-11 bg-brand/10 rounded-xl flex items-center justify-center group-hover:bg-brand/20 transition-colors">
-                    <Bell size={20} className="text-brand" strokeWidth={2.5} />
+          ) : (
+            (() => {
+              const unreadCount = notifications.filter((n) => n.unread).length;
+              return (
+                <Link
+                  key="notifications"
+                  href="/vendor/notifications"
+                  className="col-span-6 md:col-span-3 group bg-surface border border-surface-border hover:border-brand/40 rounded-2xl p-5 flex flex-col justify-between hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-11 h-11 bg-brand/10 rounded-xl flex items-center justify-center group-hover:bg-brand/20 transition-colors">
+                      <Bell
+                        size={20}
+                        className="text-brand"
+                        strokeWidth={2.5}
+                      />
+                    </div>
+                    {unreadCount > 0 && (
+                      <span className="w-6 h-6 bg-brand text-white text-[11px] font-extrabold rounded-full flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
                   </div>
-                  {unreadCount > 0 && (
-                    <span className="w-6 h-6 bg-brand text-white text-[11px] font-extrabold rounded-full flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm font-bold text-primary group-hover:text-brand transition-colors">Notifications</p>
-                  <p className="text-[11px] text-muted font-medium mt-0.5">
-                    {unreadCount > 0 ? `${unreadCount} unread` : "All caught up"}
-                  </p>
-                </div>
-                <ArrowUpRight size={15} className="mt-3 ml-auto text-muted opacity-0 group-hover:opacity-100 transition-opacity" strokeWidth={2.5} />
-              </Link>
-            );
-          })()
+                  <div>
+                    <p className="text-sm font-bold text-primary group-hover:text-brand transition-colors">
+                      Notifications
+                    </p>
+                    <p className="text-[11px] text-muted font-medium mt-0.5">
+                      {unreadCount > 0
+                        ? `${unreadCount} unread`
+                        : "All caught up"}
+                    </p>
+                  </div>
+                  <ArrowUpRight
+                    size={15}
+                    className="mt-3 ml-auto text-muted opacity-0 group-hover:opacity-100 transition-opacity"
+                    strokeWidth={2.5}
+                  />
+                </Link>
+              );
+            })()
+          ),
         )}
 
         {/* KPI tiles */}
         {[
-          { label: "Paid Invoices", value: "45", icon: Check, color: "text-success", bg: "bg-success/10", iconColor: "#22C55E" },
-          { label: "Pending",       value: "12", icon: Clock,  color: "text-warning",  bg: "bg-warning/10",  iconColor: "#F59E0B" },
-          { label: "Active Clients",value: "24", icon: Users,  color: "text-purple-500", bg: "bg-purple-500/10", iconColor: "#A855F7" },
+          {
+            label: "Paid Invoices",
+            value: "45",
+            icon: Check,
+            color: "text-success",
+            bg: "bg-success/10",
+            iconColor: "#22C55E",
+          },
+          {
+            label: "Pending",
+            value: "12",
+            icon: Clock,
+            color: "text-warning",
+            bg: "bg-warning/10",
+            iconColor: "#F59E0B",
+          },
+          {
+            label: "Active Clients",
+            value: "24",
+            icon: Users,
+            color: "text-purple-500",
+            bg: "bg-purple-500/10",
+            iconColor: "#A855F7",
+          },
         ].map((kpi) => (
-          <div key={kpi.label} className="col-span-4 md:col-span-2 bg-surface border border-surface-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2 hover:shadow-sm transition-shadow">
-            <div className={`w-9 h-9 ${kpi.bg} rounded-xl flex items-center justify-center`}>
+          <div
+            key={kpi.label}
+            className="col-span-4 md:col-span-2 bg-surface border border-surface-border rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-2 hover:shadow-sm transition-shadow"
+          >
+            <div
+              className={`w-9 h-9 ${kpi.bg} rounded-xl flex items-center justify-center`}
+            >
               <kpi.icon size={17} color={kpi.iconColor} strokeWidth={2.5} />
             </div>
-            <p className={`text-2xl font-extrabold ${kpi.color}`}>{kpi.value}</p>
-            <p className="text-[10px] font-bold text-muted uppercase tracking-wider leading-tight">{kpi.label}</p>
+            <p className={`text-2xl font-extrabold ${kpi.color}`}>
+              {kpi.value}
+            </p>
+            <p className="text-[10px] font-bold text-muted uppercase tracking-wider leading-tight">
+              {kpi.label}
+            </p>
           </div>
         ))}
-
       </div>
-
-
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
         <Card className="flex flex-col">
           <div className="p-6 border-b border-surface-border flex justify-between items-center bg-surface-raised/50">
             <h3 className="text-sm md:text-base font-bold text-primary flex items-center gap-2">
-              <Activity
-                size={18}
-                className="text-brand"
-                strokeWidth={2.5}
-              />
+              <Activity size={18} className="text-brand" strokeWidth={2.5} />
               Recent Activity
             </h3>
             <Button
@@ -426,11 +500,7 @@ export default function VendorDashboard() {
           <div className="p-6 border-b border-white/10 flex justify-between items-center relative z-10">
             <div>
               <h3 className="text-sm md:text-base font-bold flex items-center gap-2">
-                <Users
-                  size={18}
-                  color="#A78BFA"
-                  strokeWidth={2.5}
-                />
+                <Users size={18} color="#A78BFA" strokeWidth={2.5} />
                 Top Clients
               </h3>
             </div>

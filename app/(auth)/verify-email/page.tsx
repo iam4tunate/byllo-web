@@ -16,8 +16,9 @@ export default function VerifyEmailPage() {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const email = session?.user?.email;
+  console.log(session);
 
   // Resend cooldown
   const [resendSeconds, setResendSeconds] = useState(RESEND_COOLDOWN);
@@ -45,6 +46,7 @@ export default function VerifyEmailPage() {
       setIsLoading(true);
       try {
         await authApi.verifyEmail({ email, code });
+        await update({ emailVerified: true });
         router.push("/vendor/dashboard");
       } catch (err) {
         setError(
@@ -56,7 +58,7 @@ export default function VerifyEmailPage() {
         setIsLoading(false);
       }
     },
-    [isLoading, router, email],
+    [isLoading, router, email, update],
   );
 
   const handleSubmit = (e: React.FormEvent) => {

@@ -71,12 +71,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-dark-card);
+  background: var(--color-dark-muted);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-dark-card);
+  background: var(--color-dark-border);
 }
 
 

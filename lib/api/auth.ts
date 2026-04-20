@@ -5,6 +5,7 @@ export interface SignupRequest {
   lastName: string;
   email: string;
   password: string;
+  role: string;
 }
 
 export interface VerifyEmailRequest {
@@ -17,12 +18,11 @@ export interface ResendVerificationRequest {
 }
 
 export const authApi = {
-  signup: (data: SignupRequest) =>
-    api.post("/auth/signup", data),
+  signup: (data: SignupRequest) => api.post("/auth/signup", data),
 
   verifyEmail: (data: VerifyEmailRequest) =>
     api.post("/auth/verify-email", data),
 
   resendVerification: (data: ResendVerificationRequest) =>
-    api.post("/auth/resend-verification", data),
+    api.post("/auth/resend-verification-code", data),
 };

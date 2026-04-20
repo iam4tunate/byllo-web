@@ -45,7 +45,7 @@ export default function LoginPage() {
         if (session?.user?.emailVerified) {
           router.push("/vendor/dashboard");
         } else {
-          router.push(`/verify-email?email=${encodeURIComponent(formData.email)}`);
+          router.push(`/verify-email`);
         }
         
         router.refresh();

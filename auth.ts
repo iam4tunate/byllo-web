@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) {
         const u = user as ExtUser;
         token.accessToken = u.token;
@@ -66,6 +66,11 @@ export const authOptions: NextAuthOptions = {
         token.emailVerified = u.emailVerified;
         token.role = u.role;
       }
+
+      if (trigger === "update" && session) {
+        return { ...token, ...session };
+      }
+
       return token;
     },
     session({ session, token }) {
